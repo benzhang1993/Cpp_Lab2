@@ -8,11 +8,20 @@
 using std:: cout;
 using std:: endl;
 
+/**
+ * A pair containing an integer and a decimal.
+ */
 struct pair {
     int integer;
     double decimal;
 };
 
+/**
+ * Creates a list of randomly generated pairs of integer and double of size 512 to 1024, the integers are in ascending order,
+ * the doubles are randomly chosen from 50 to 90.
+ *
+ * return: vector<pair>: returns the list of pairs as a vector.
+ */
 std::vector<pair> createList() {
     std::random_device rd;
     std::mt19937 generator(rd());
@@ -31,6 +40,10 @@ std::vector<pair> createList() {
     return v;
 }
 
+/**
+ * Takes a vector of pairs and enter the value in a file.
+ * @param list A vector of pairs of integer and double.
+ */
 void createFile(std::vector<pair> list) {
     std::ofstream myFile;
     myFile.open("Readings.txt");
@@ -40,42 +53,46 @@ void createFile(std::vector<pair> list) {
     myFile << list[list.size() - 1].integer << " " << std::setprecision(3)<< std::fixed << list[list.size() - 1].decimal;
 }
 
+/**
+ * Reads a file and print out the number of lines, average, highest, lowest, and median of the doubles in the list.
+ * @param name Name of the file to be read from.
+ */
 void readFile(std::string name) {
     std::ifstream file(name);
     std::istringstream iss;
     std::string line;
     int total = 0;
-    int integer, aveInt = 0;
     double decimal, aveDec = 0;
-    std::vector<int> intlist;
     std::vector<double> declist;
 
+    // reads file line by line
     while(getline(file, line)) {
 
         // clears and sets stream
         iss.clear();
         iss.str(line);
+        int temp;
+        iss >> temp;
 
         // calculates total
         total++;
 
-        // brings in integer and decimal from the line
-        iss >> integer;
+        // brings in decimal from the line
         iss >> decimal;
 
         // adds to total for calculating average later
-        aveInt += integer;
         aveDec += decimal;
 
-        intlist.push_back(integer);
+        // adds the double to the list
         declist.push_back(decimal);
-        std::sort(intlist.begin(), intlist.end());
+        // sorts the list
         std::sort(declist.begin(), declist.end());
     }
 
-    aveInt = aveInt / total;
+    // calculating average
     aveDec = aveDec / total;
 
+    // printing output
     cout << "There are " << total - 1 << " readings in the file." << endl;
     cout << "The average reading is " << aveDec << "." << endl;
     cout << "The highest reading is " << declist.at(declist.size() - 1) << "." << endl;
